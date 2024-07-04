@@ -151,15 +151,18 @@ for ti in t:
     ld.run_one_step(dt) # linear diffusion
     total_time += dt  # update time keeper
     print(total_time)
+    print("Maximum elevation is ", np.max(z1))
     
 # Code Block 8 - plot figure
 
 imshow_grid(mg1,
             "topographic__elevation",
             grid_units=("m", "m"),
-            var_name="Elevation (m)")
+            var_name="Elevation (m)",
+            limits=(0,80))
 title_text = f"$K_{{sp}}$={K_sp}; $time$={total_time} yr; $dx$={dxy} m"
 plt.title(title_text)
+plt.savefig('C:\\Users\\renat\\OneDrive - City University of New York\\DOUTORADO CUNY\\CSDMS\\Figure\\figure_1_0ky.png', dpi=600)
 
 max_elev = np.max(z1)
 print("Maximum elevation is ", np.max(z1))   
@@ -221,7 +224,12 @@ prf.plot_profiles(xlabel='distance upstream (m)',
 
 # plot the location of the channels in map view
 plt.figure(2)
-prf.plot_profiles_in_map_view()
+prf.plot_profiles_in_map_view(var_name="Elevation (m)", limits=(0,80))
+title_text = f"$K_{{sp}}$={K_sp}; $time$={total_time} yr; $dx$={dxy} m"
+plt.title(title_text)
+filepath='C:\\Users\\renat\\OneDrive - City University of New York\\DOUTORADO CUNY\\CSDMS\\Figure\\'
+plt.savefig(filepath+'figure_4_300ky.png', dpi=600)
+
 
 # slope-area data in just the profiled channels
 plt.figure(3)
