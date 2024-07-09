@@ -18,9 +18,47 @@ from landlab.components import (
     SteepnessFinder,
     StreamPowerEroder,
     LinearDiffuser,
+    DepressionFinderAndRouter, 
+    FlowDirectorD8
 )
 
 from landlab.io import write_esri_ascii
+from landlab.components.flow_accum import find_drainage_area_and_discharge
+
+def extract_drainage_basins(grid, elevation_field):
+    fa = FlowAccumulator(grid, elevation_field, flow_director='FlowDirectorD8')
+    fa.run_one_step()
+    
+    profiler = ChannelProfiler(grid, number_of_watersheds=None, minimum_channel_threshold=10)
+    profiler.run_one_step()
+    
+    outlets = list(profiler.data_structure.keys())
+    
+    drainage_basins = np.zeros_like(grid.at_node['flow__receiver_node'], dtype=int)
+    
+    def label_basin(node, basin_id):
+        nodes_to_visit = [node]
+        while nodes_to_visit:
+            current_node = nodes_to_visit.pop()
+            if drainage_basins[current_node] == 0:
+                drainage_basins[current_node] = basin_id
+                receivers = grid.at_node['flow__receiver_node'][current_node]
+                if receivers != current_node:
+                    if isinstance(receivers, np.ndarray):
+                        for rec in receivers:
+                            if drainage_basins[rec] == 0:
+                                nodes_to_visit.append(rec)
+                    else:
+                        if drainage_basins[receivers] == 0:
+                            nodes_to_visit.append(receivers)
+    
+    basin_id = 1
+    for outlet in outlets:
+        if drainage_basins[outlet] == 0:
+            label_basin(outlet, basin_id)
+            basin_id += 1
+    
+    return drainage_basins, outlets
 
 # Code Block 2 - Make a grid and set boundary conditions
 
@@ -84,7 +122,7 @@ m_sp = 0.5  # exponent on drainage area in stream power equation
 n_sp = 1.0  # exponent on slope in stream power equation
 
 frr = FlowAccumulator(mg1)  # intializing flow routing
-spr = StreamPowerEroder(mg1, K_sp=lithology, m_sp=m_sp, n_sp=n_sp,
+spr = StreamPowerEroder(mg1, K_sp=K_sp, m_sp=m_sp, n_sp=n_sp,
                         threshold_sp=0.0)  # initializing stream power incision
 ld = LinearDiffuser(mg1, linear_diffusivity=0.0025)
 
@@ -166,6 +204,23 @@ plt.savefig('C:\\Users\\renat\\OneDrive - City University of New York\\DOUTORADO
 
 max_elev = np.max(z1)
 print("Maximum elevation is ", np.max(z1))   
+
+# Extract drainage basins
+basins, outlets = extract_drainage_basins(mg1, 'topographic__elevation')
+
+print("Drainage Basins Grid:")
+print(basins.reshape(mg1.shape))
+print("Outlets:")
+print(outlets)
+
+# Plot the grid and the outlets
+imshow_grid(mg1, "topographic__elevation", grid_units=("m", "m"), var_name="Elevation (m)")
+
+outlet_x, outlet_y = mg1.node_x[outlets], mg1.node_y[outlets]
+plt.scatter(outlet_x, outlet_y, color='red', marker='o', label='Outlets')
+plt.legend()
+plt.title("Elevation and Drainage Basin Outlets")
+plt.show()
 
 # Code Block 9 - Plot the slope and area data at each point on the landscape (in log-log space)
 
