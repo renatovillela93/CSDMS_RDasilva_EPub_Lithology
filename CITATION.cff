@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Da Silva"
+    given-names: "Renato"
+    orcid: "https://orcid.org/0000-0002-1512-380X"
+    - family-names: "Oliveira"
+    given-names: "Pedro"
+    orcid: "https://orcid.org/0000-0003-4633-7031"
+    - family-names: "Val"
+    given-names: "Pedro"
+    orcid: "https://orcid.org/0000-0001-5370-4122"
+title: "The shrinking and expanding of basins: insights from a Landscape Evolution Model with high lithological contrast"
+version: "1.0.0"
+doi: "10.5281/zenodo.12738032"  
+date-released: 2024-07-13
+url: "https://github.com/renatovillela93/CSDMS_RDasilva_EPub_Lithology"
