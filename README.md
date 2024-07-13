@@ -4,7 +4,7 @@
 Authors and Affiliation: 
 
 Renato da Silva*, 
-Pedro Silvestre*, 
+Pedro Oliveira*, 
 Pedro Val* 
 
 *CUNY Queens College - School of Earth and Environmental Sciences
