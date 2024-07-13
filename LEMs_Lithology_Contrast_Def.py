@@ -411,9 +411,4 @@ write_esri_ascii(write_file_name + 'topographic__steepest_slope.txt', mg1, 'topo
 write_esri_ascii(write_file_name + 'channel__steepness_index.txt', mg1, 'channel__steepness_index')
 write_esri_ascii(write_file_name + 'channel__chi_index.txt', mg1, 'channel__chi_index')
 
-# Code Block 14 - Assessing evolution of parameters through time
-
-# provavelmente consigo fazer via matlab... eu importo esses arquivos como gridobjs e calculo
-# a media de cada um deles para a bacia (usando o outlet, por ex). Provavelmente consigo 
-# fazer isso importando a topografia e rodando makestreams, basinpicker, processriverbasins, 
 # e compileriverbasins
